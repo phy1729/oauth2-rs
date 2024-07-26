@@ -32,6 +32,13 @@ macro_rules! new_type {
                 stringify!($type),
                 "`."
             ),
+            concat!(
+                "Unwraps this `",
+                stringify!($name),
+                "`, returning the underlying `",
+                stringify!($type),
+                "`."
+            ),
             impl {}
         ];
     };
@@ -59,6 +66,13 @@ macro_rules! new_type {
                 stringify!($type),
                 "`."
             ),
+            concat!(
+                "Unwraps this `",
+                stringify!($name),
+                "`, returning the underlying `",
+                stringify!($type),
+                "`."
+            ),
             impl {
                 $($item)*
             }
@@ -72,6 +86,7 @@ macro_rules! new_type {
             $type:ty
         ),
         $new_doc:expr,
+        $into_inner_doc:expr,
         impl {
             $($item:tt)*
         }
@@ -88,6 +103,10 @@ macro_rules! new_type {
             #[doc = $new_doc]
             pub const fn new(s: $type) -> Self {
                 $name(s)
+            }
+            #[doc = $into_inner_doc]
+            pub fn into_inner(self) -> $type {
+                self.0
             }
         }
         impl Deref for $name {
@@ -219,6 +238,11 @@ macro_rules! new_url_type {
             concat!("Create a new `", stringify!($name), "` from a `String` to wrap a URL."),
             concat!("Create a new `", stringify!($name), "` from a `Url` to wrap a URL."),
             concat!("Return this `", stringify!($name), "` as a parsed `Url`."),
+            concat!(
+                "Unwraps this `",
+                stringify!($name),
+                "`, returning the underlying `URL`."
+            ),
             impl {}
         ];
     };
@@ -236,6 +260,11 @@ macro_rules! new_url_type {
             concat!("Create a new `", stringify!($name), "` from a `String` to wrap a URL."),
             concat!("Create a new `", stringify!($name), "` from a `Url` to wrap a URL."),
             concat!("Return this `", stringify!($name), "` as a parsed `Url`."),
+            concat!(
+                "Unwraps this `",
+                stringify!($name),
+                "`, returning the underlying `URL`."
+            ),
             impl {
                 $($item)*
             }
@@ -248,6 +277,7 @@ macro_rules! new_url_type {
         $new_doc:expr,
         $from_url_doc:expr,
         $url_doc:expr,
+        $into_inner_doc:expr,
         impl {
             $($item:tt)*
         }
@@ -268,6 +298,10 @@ macro_rules! new_url_type {
             #[doc = $url_doc]
             pub fn url(&self) -> &Url {
                 return &self.0;
+            }
+            #[doc = $into_inner_doc]
+            pub fn into_inner(self) -> Url {
+                self.0
             }
             $($item)*
         }
